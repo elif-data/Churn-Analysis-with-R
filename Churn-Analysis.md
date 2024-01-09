@@ -1,4 +1,4 @@
-Customer Churn Analysis (Ongoing Project)
+A Tutorial: Customer Churn Data Analysis
 ================
 
 We are looking at a customer churn data set for a Telecom company and we
@@ -42,8 +42,8 @@ telecom
 
 Let’s start with exploring the main churn categories column. It seems
 like a significant portion of churners are leaving for a competitor. I
-think it would be beneficial to see the proportions in order to gain a
-clearer understanding of this trend.
+think it would be beneficial to see some numbers on the bars, in order
+to gain a clearer understanding of this trend.
 
 ``` r
 library(tidyverse)
@@ -58,8 +58,9 @@ telecom %>%
 
 ### 
 
-Much better. Now I know *almost half of the churners* opt for a
-competitor.
+Much better. It is much easier to see that *almost half of the churners*
+opt for a competitor. It’s worth mentioning that the second and third
+reasons are head to head, “Dissatisfaction” and “Attitude”.
 
 ``` r
 telecom %>% 
@@ -83,10 +84,99 @@ telecom %>%
 
 Let’s dig deeper into the factors contributing to customer churn.
 
-“Competitor having better devices and better offers” stand out as two
-primary reasons for churn. Although attitude holds the third position in
-the churn categories, it’s worth highlighting that the support person’s
-attitude is among the top three factors.
+### 
+
+I want to quickly see the churn reasons along with churn categories.
+
+One thing I notice is “I don’t know” is the 4th reasons for churn. But
+does anyone truly part ways with their telecom provider without a clue?
+It might be worth pointing this out to the team responsible for the
+survey or the stakeholders involved.
+
+Another thing I notice is the potential overlap within some of the churn
+reasons. For instance, one churn reason is “service dissatisfaction”
+which is under churn category “dissatisfaction”. Unless the customer
+completely stopped using telecom services all together, they are highly
+likely to have opt our for a competitor.
+
+Similarly, churn reason “lack of affordable download/upload speed” under
+churn category “price” and churn reason “competitor offered higher
+download speeds” under churn category “competitor”. They opt out for a
+competitor, they did not stop using internet. It might be beneficial to
+reconsider churn category “competitor” to get clearer distinctions
+between different motivations for churning.
+
+``` r
+telecom %>% 
+  filter(`Customer Status` == "Churned") %>% 
+  group_by(`Churn Category`, `Churn Reason`) %>% 
+  summarise(n = n()) %>% 
+  ungroup() %>% 
+  mutate(pct = round(n / sum(n)*100)) %>% 
+  arrange(-n)
+```
+
+    ## `summarise()` has grouped output by 'Churn Category'. You can override using
+    ## the `.groups` argument.
+
+    ## # A tibble: 20 × 4
+    ##    `Churn Category` `Churn Reason`                                n   pct
+    ##    <chr>            <chr>                                     <int> <dbl>
+    ##  1 Competitor       Competitor had better devices               313    17
+    ##  2 Competitor       Competitor made better offer                311    17
+    ##  3 Attitude         Attitude of support person                  220    12
+    ##  4 Other            Don't know                                  130     7
+    ##  5 Competitor       Competitor offered more data                117     6
+    ##  6 Competitor       Competitor offered higher download speeds   100     5
+    ##  7 Attitude         Attitude of service provider                 94     5
+    ##  8 Price            Price too high                               78     4
+    ##  9 Dissatisfaction  Product dissatisfaction                      77     4
+    ## 10 Dissatisfaction  Network reliability                          72     4
+    ## 11 Price            Long distance charges                        64     3
+    ## 12 Dissatisfaction  Service dissatisfaction                      63     3
+    ## 13 Other            Moved                                        46     2
+    ## 14 Price            Extra data charges                           39     2
+    ## 15 Dissatisfaction  Limited range of services                    37     2
+    ## 16 Dissatisfaction  Poor expertise of online support             31     2
+    ## 17 Price            Lack of affordable download/upload speed     30     2
+    ## 18 Dissatisfaction  Lack of self-service on Website              29     2
+    ## 19 Dissatisfaction  Poor expertise of phone support              12     1
+    ## 20 Other            Deceased                                      6     0
+
+I wanted to show both categories and reasons in the same graph but I
+feel like it overcomplicates things.
+
+``` r
+telecom %>% 
+  filter(`Customer Status` == "Churned") %>% 
+  ggplot(aes(fct_rev(fct_infreq(`Churn Reason`)), fill = `Churn Category`)) + geom_bar() + coord_flip()
+```
+
+<img src="Churn-Analysis_files/figure-gfm/unnamed-chunk-5-1.png" style="display: block; margin: auto;" />
+
+To show it with percentages
+
+``` r
+telecom %>% 
+  filter(`Customer Status` == "Churned") %>% 
+  group_by(`Churn Category`, `Churn Reason`) %>% 
+  summarise(n = n(), .groups = "keep") %>% 
+  ungroup() %>% 
+  mutate(pct = round(n / sum(n)*100)) %>% 
+  arrange(-n) %>% 
+  mutate(`Churn Reason` = reorder(`Churn Reason`, n)) %>%  # mutate(n = ordered(n, levels = .$n), n) ~ this wouldn't work
+  ggplot(aes(`Churn Reason`, n, fill = `Churn Category`)) + geom_col() + coord_flip() +
+  geom_text(
+    aes(label = paste0(round(pct,0), " %")),
+    color = "gray15",
+    position = position_stack(vjust = 0.5))
+```
+
+<img src="Churn-Analysis_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
+
+“Competitor having better devices” and “Competitor having better offers”
+stand out as two primary reasons for customer churn, followed by
+“Attitude of support person”.
 
 ``` r
 telecom %>% 
@@ -98,7 +188,7 @@ telecom %>%
        title = "Churn Reasons in Depth")
 ```
 
-<img src="Churn-Analysis_files/figure-gfm/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
+<img src="Churn-Analysis_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
 ### 
 
@@ -117,7 +207,7 @@ telecom %>%
   theme(axis.text.x = element_text(angle = 90, hjust=1)) +
   geom_text(
     aes(label = paste0(round(pct,0), " %")),
-    color = "black",
+    color = "gray15",
     position = position_stack(vjust = 0.5)) +
   labs(x = element_blank(),
        y = element_blank(),
@@ -126,7 +216,20 @@ telecom %>%
 
     ## Selecting by pct
 
-<img src="Churn-Analysis_files/figure-gfm/unnamed-chunk-5-1.png" style="display: block; margin: auto;" />
+<img src="Churn-Analysis_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
+
+Conclusions,
+
+1 - We need to conduct market research to get better devices and better
+offers.
+
+2 - We need better support persons either by training existing staff or
+hiring new ones.
+
+3 - We could update the exit interview questionnaire applied to
+churners.
+
+### Customer Profile
 
 ### 
 
@@ -244,7 +347,11 @@ p1 <- telecom %>%
   scale_fill_brewer(palette = "Dark2")
   
 p2 <- revenue_breakdown("Married") %>% 
-  ggplot(aes(Married, group_total_rev, fill = Married)) + geom_col(alpha = 0.7)+ 
+  ggplot(aes(Married, group_total_rev, fill = Married)) + geom_col(alpha = 0.7) + 
+  geom_text(
+    aes(label = paste0(round(pct_rev, 0), " %")),
+    color = "gray15",
+    position = position_stack(vjust = 0.5)) +
   scale_y_continuous(labels = label_number(suffix = " M", scale = 1e-6), expand = expansion(mult = c(0,0.1))) +
   theme_bw() + 
   theme(axis.title.x = element_blank(), axis.title.y = element_blank()) + 
@@ -263,7 +370,7 @@ p3 <- telecom %>%
 p1 + (p2 + plot_layout(guides = "collect") & theme(legend.position = 'bottom')) + p3
 ```
 
-![](Churn-Analysis_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](Churn-Analysis_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ``` r
 options(scipen=10000)
@@ -324,4 +431,73 @@ Let’s see if it worked
 revenue_breakdown_viz("Married")
 ```
 
-![](Churn-Analysis_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](Churn-Analysis_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+### Now I want to use my package for multiple columns
+
+``` r
+# str(telecom)
+
+
+list_viz1 <- telecom %>% 
+  colnames() %>% 
+  .[c(2, 39, 4, 40)] %>% # 10 is Nr of referrals
+  lapply(revenue_breakdown_viz)
+
+list_viz1
+```
+
+    ## [[1]]
+
+![](Churn-Analysis_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+    ## 
+    ## [[2]]
+
+![](Churn-Analysis_files/figure-gfm/unnamed-chunk-16-2.png)<!-- -->
+
+    ## 
+    ## [[3]]
+
+![](Churn-Analysis_files/figure-gfm/unnamed-chunk-16-3.png)<!-- -->
+
+    ## 
+    ## [[4]]
+
+![](Churn-Analysis_files/figure-gfm/unnamed-chunk-16-4.png)<!-- -->
+
+# Other
+
+``` r
+# str(telecom)
+
+
+list_viz2 <- telecom %>% 
+  colnames() %>% 
+  .[c(12, 13)] %>% # 12 is Offer, 29 is payment method add 15:29
+  lapply(revenue_breakdown_viz)
+
+list_viz2
+```
+
+    ## [[1]]
+
+![](Churn-Analysis_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+    ## 
+    ## [[2]]
+
+![](Churn-Analysis_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
+
+# Main takeaways:
+
+1.  No significant difference between genders.
+
+2.  Age 55+ customers are the biggest category, and with the highest
+    median spend, too. Followed by age 18-24 as highest spend but they
+    are the lowest in population.
+
+3.  Married customers brought more revenue on average for this quarter
+    despite having slightly less population in the mix.
+
+4.  
