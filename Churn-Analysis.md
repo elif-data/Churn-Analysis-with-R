@@ -4,11 +4,11 @@ A Tutorial: Customer Churn Data Analysis
 We are looking at a customer churn data set for a Telecom company and we
 will be communicating the insights to the marketing team.
 
-In our exploratory analysis we will be investigating:
+In our exploratory analysis, we will be investigating:
 
 1.  What are the main churn reasons?
 
-2.  Who are high value customers?
+2.  Who are high-value customers?
 
 3.  What are the characteristics of a customer that left, joined, and
     stayed?
@@ -60,7 +60,7 @@ telecom %>%
 
 Much better. It is much easier to see that *almost half of the churners*
 opt for a competitor. It’s worth mentioning that the second and third
-reasons are head to head, “Dissatisfaction” and “Attitude”.
+reasons are head-to-head, “Dissatisfaction” and “Attitude”.
 
 ``` r
 telecom %>% 
@@ -86,7 +86,7 @@ Let’s dig deeper into the factors contributing to customer churn.
 
 ### 
 
-I want to quickly see the churn reasons along with churn categories.
+I want to see the churn reasons and churn categories.
 
 One thing I notice is “I don’t know” is the 4th reasons for churn. But
 does anyone truly part ways with their telecom provider without a clue?
@@ -96,14 +96,14 @@ survey or the stakeholders involved.
 Another thing I notice is the potential overlap within some of the churn
 reasons. For instance, one churn reason is “service dissatisfaction”
 which is under churn category “dissatisfaction”. Unless the customer
-completely stopped using telecom services all together, they are highly
-likely to have opt our for a competitor.
+completely stopped using telecom services altogether, they are highly
+likely to have opted out for a competitor.
 
 Similarly, churn reason “lack of affordable download/upload speed” under
-churn category “price” and churn reason “competitor offered higher
-download speeds” under churn category “competitor”. They opt out for a
-competitor, they did not stop using internet. It might be beneficial to
-reconsider churn category “competitor” to get clearer distinctions
+the churn category “price” and churn reason “competitor offered higher
+download speeds” under the churn category “competitor”. They opted out for a
+competitor, they did not stop using the internet. It might be beneficial to
+reconsider the churn category “competitor” to get clearer distinctions
 between different motivations for churning.
 
 ``` r
@@ -263,7 +263,7 @@ telecom %>%
 
 ### 
 
-Let’s package the above code as function.
+Let’s package the above code as a function.
 
 We have to pass the *col_name* parameter as *!!sym(col_name)* as we need
 to pass it in quotation marks when we apply the function.
@@ -286,9 +286,9 @@ We can now easily inspect any categorical variable. Upon calling the
 function and passing “Married”, we can see that married customers bring
 64% of the total revenue within the group, the average revenue they
 bring is almost double compared to single customers. This makes sense
-since the number of customers the both group is similar.
+since the number of customers the both groups are similar.
 
-It could be beneficial for marketing team to target married customers or
+It could be beneficial for the marketing team to target married customers or
 spend more of the budget on advertising specific to married customers.
 
 ``` r
@@ -303,7 +303,7 @@ revenue_breakdown("Married")
 
 ### 
 
-To avoid repeating calling the function over and over again, I am going
+To avoid repeating the function over and over again, I am going
 to pass the column names using dyplyr. Produces table will be stored in
 a list.
 
@@ -378,7 +378,7 @@ options(scipen=10000)
 
 ### 
 
-Let’s package the above code as function:
+Let’s package the above code as a function:
 
 ``` r
 revenue_breakdown_viz <- function(col_name){
@@ -491,13 +491,15 @@ list_viz2
 
 # Main takeaways:
 
-1.  No significant difference between genders.
+1.  The main churn reasons are competitors offering better devices, better deals and the attitude of the support person. We need to be more competitive and might need to either train the support team or conduct a survey to measure each support agent's performance.
 
-2.  Age 55+ customers are the biggest category, and with the highest
-    median spend, too. Followed by age 18-24 as highest spend but they
-    are the lowest in population.
+2.  Customers aged 55 or higher, are the biggest portion of customers with both the highest
+    total and mean spend.
 
-3.  Married customers brought more revenue on average for this quarter
-    despite having slightly less population in the mix.
+3.  Customers aged 18 to 24 have the second highest total spend but
+    are the lowest in population. We might try and increase the number of this population by providing offers this age group might be interested in such as free internet for TikTok.
 
-4.  
+4.  Married customers brought more revenue on average for this quarter
+    despite having a slightly less population in the mix. We might try to increase the number of married people by providing offers such as a family phone plan. We might be able to attract the group aged 18 to 24.
+
+5.  In terms of tenure, less than one year seems to be the most popular. Unfortunately, it has the lowest mean spend. The highest mean spend belongs to customers who stayed five to six years. Making long term contracts more appealing could help both increase revenue and customer retention.
