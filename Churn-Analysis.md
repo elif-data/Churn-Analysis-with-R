@@ -491,15 +491,16 @@ list_viz2
 
 # Main takeaways:
 
-1.  The main churn reasons are competitors offering better devices, better deals and the attitude of the support person. We need to be more competitive and might need to either train the support team or conduct a survey to measure each support agent's performance.
+1. Top Reasons for Churn: 
 
-2.  Customers aged 55 or higher, are the biggest portion of customers with both the highest
-    total and mean spend.
+The main reasons for customer churn are competitors offering better devices, better deals, and issues with support staff attitudes. To remain competitive, we should focus on improving our offerings and consider training our support team or conducting a survey to assess individual performance.
+2. Customer Age Groups:
+Customers aged 55 and above make up the largest portion of both total and average spend, indicating their significant value to the business.
+The 18 to 24 age group, despite having the second-highest total spend, has the smallest population. To attract more of this demographic, we could offer tailored promotions, such as free internet for TikTok users.
 
-3.  Customers aged 18 to 24 have the second highest total spend but
-    are the lowest in population. We might try and increase the number of this population by providing offers this age group might be interested in such as free internet for TikTok.
+3. Marital Status: 
 
-4.  Married customers brought more revenue on average for this quarter
-    despite having a slightly less population in the mix. We might try to increase the number of married people by providing offers such as a family phone plan. We might be able to attract the group aged 18 to 24.
+Married customers generate higher revenue on average, despite having a slightly smaller population. To target this group and potentially attract younger customers, we could introduce offers like family phone plans, which may appeal to both married individuals and the 18 to 24 age group.
+4. Customer Tenure: 
 
-5.  In terms of tenure, less than one year seems to be the most popular. Unfortunately, it has the lowest mean spend. The highest mean spend belongs to customers who stayed five to six years. Making long term contracts more appealing could help both increase revenue and customer retention.
+Customers with less than one year of tenure represent the largest group, but they also have the lowest average spend. On the other hand, customers who have been with us for five to six years have the highest average spend. Making long-term contracts more attractive could help increase both customer retention and overall revenue.
