@@ -1,4 +1,4 @@
-A Tutorial: Customer Churn Data Analysis
+Customer Churn Data Analysis
 ================
 
 We are looking at a customer churn data set for a Telecom company and we
